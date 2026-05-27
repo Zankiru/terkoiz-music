@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terkoiz — Music</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface2: #16161f;
+      --border: rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.15);
+      --text: #f0eff5;
+      --muted: #7c7b8a;
+      --accent: #7b6cff;
+      --accent2: #c084fc;
+      --spotify: #1db954;
+      --soundcloud: #ff5500;
+      --twitch: #9146ff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* NOISE TEXTURE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* AMBIENT GLOW */
+    .glow-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-1 {
+      width: 600px; height: 600px;
+      background: rgba(123,108,255,0.12);
+      top: -200px; left: -100px;
+    }
+
+    .glow-2 {
+      width: 400px; height: 400px;
+      background: rgba(192,132,252,0.08);
+      bottom: 10%; right: -100px;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      height: 64px;
+      background: rgba(10,10,15,0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* SECTIONS */
+    section {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem clamp(1.5rem, 8vw, 8rem) 5rem;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(4rem, 12vw, 9rem);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    h1 .line2 {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(240,239,245,0.3);
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      font-weight: 300;
+      max-width: 440px;
+      margin-bottom: 3rem;
+      line-height: 1.8;
+    }
+
+    .hero-platforms {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .platform-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      border-radius: 6px;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .platform-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    .btn-spotify {
+      background: rgba(29,185,84,0.12);
+      color: var(--spotify);
+      border-color: rgba(29,185,84,0.25);
+    }
+
+    .btn-spotify:hover {
+      background: rgba(29,185,84,0.2);
+      border-color: rgba(29,185,84,0.5);
+    }
+
+    .btn-soundcloud {
+      background: rgba(255,85,0,0.12);
+      color: var(--soundcloud);
+      border-color: rgba(255,85,0,0.25);
+    }
+
+    .btn-soundcloud:hover {
+      background: rgba(255,85,0,0.2);
+      border-color: rgba(255,85,0,0.5);
+    }
+
+    .btn-twitch {
+      background: rgba(145,70,255,0.12);
+      color: var(--twitch);
+      border-color: rgba(145,70,255,0.25);
+    }
+
+    .btn-twitch:hover {
+      background: rgba(145,70,255,0.2);
+      border-color: rgba(145,70,255,0.5);
+    }
+
+    /* SCROLL INDICATOR */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: clamp(1.5rem, 8vw, 8rem);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .scroll-line {
+      width: 40px;
+      height: 1px;
+      background: var(--muted);
+    }
+
+    /* TRACKS */
+    #tracks {
+      padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 8vw, 8rem);
+      border-top: 1px solid var(--border);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 3rem;
+    }
+
+    .section-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      letter-spacing: -0.01em;
+    }
+
+    .track-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .track {
+      display: grid;
+      grid-template-columns: 40px 1fr auto auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+      cursor: default;
+    }
+
+    .track:hover {
+      background: var(--surface);
+      border-color: var(--border);
+    }
+
+    .track-num {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 400;
+      text-align: center;
+    }
+
+    .track-info { min-width: 0; }
+
+    .track-title {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .track-type {
+      font-size: 0.68rem;
+      font-weight: 500;
+      padding: 3px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .type-original {
+      background: rgba(123,108,255,0.15);
+      color: #a99fff;
+    }
+
+    .type-remix {
+      background: rgba(192,132,252,0.15);
+      color: #d8acff;
+    }
+
+    .track-duration {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    .tracks-note {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .tracks-note a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .tracks-note a:hover { text-decoration: underline; }
+
+    /* MUSIC EMBEDS */
+    .player-wrap {
+      background:#111118;
+      border:1px solid rgba(255,255,255,0.07);
+      border-radius:12px;
+      padding:1.25rem;
+      margin-bottom:12px
+    }
+
+    .track-label {
+      font-size:11px;
+      font-weight:500;
+      letter-spacing:0.1em;
+      text-transform:uppercase;
+      color:#7c7b8a;
+      margin-bottom:10px
+    }
+
+    .track-label span {
+      background:rgba(123,108,255,0.15);
+      color:#a99fff;
+      padding:2px 8px;
+      border-radius:20px;
+      margin-left:6px
+    }
+
+    iframe {
+      border-radius:8px;
+      display:block
+    }
+
+    /* ABOUT */
+    #about {
+      padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 8vw, 8rem);
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 1rem;
+      font-size: 0.97rem;
+    }
+
+    .genre-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 1.5rem;
+    }
+
+    .genre-tag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border-hover);
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .about-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .about-link {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 1.1rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .about-link:hover {
+      border-color: var(--border-hover);
+      background: var(--surface2);
+      transform: translateX(4px);
+    }
+
+    .link-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .link-icon svg { width: 18px; height: 18px; }
+
+    .icon-spotify { background: rgba(29,185,84,0.15); }
+    .icon-soundcloud { background: rgba(255,85,0,0.15); }
+    .icon-twitch { background: rgba(145,70,255,0.15); }
+
+    .link-text { flex: 1; }
+
+    .link-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+      display: block;
+    }
+
+    .link-handle {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .link-arrow {
+      font-size: 0.8rem;
+      color: var(--muted);
+      transition: transform 0.2s;
+    }
+
+    .about-link:hover .link-arrow { transform: translateX(3px); }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem clamp(1.5rem, 8vw, 8rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    footer p {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      transition: color 0.15s;
+    }
+
+    footer a:hover { color: var(--text); }
+
+    /* RESPONSIVE */
+    @media (max-width: 700px) {
+      #about { grid-template-columns: 1fr; gap: 3rem; }
+      .track { grid-template-columns: 32px 1fr auto; }
+      .track-duration { display: none; }
+      .nav-links { display: none; }
+      h1 { font-size: clamp(3rem, 16vw, 5rem); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-orb glow-1"></div>
+  <div class="glow-orb glow-2"></div>
+
+  <nav>
+    <a href="#hero" class="nav-logo">Terkoiz</a>
+    <ul class="nav-links">
+      <li><a href="#tracks">Tracks</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-tag">Music · Remixes · Live</div>
+    <h1>
+      Ter<span class="line2">koiz</span>
+    </h1>
+    <p class="hero-sub">Producer and remixer blending EDM, lo-fi, and everything in between. Listen on your platform of choice.</p>
+    <div class="hero-platforms">
+      <a href="https://open.spotify.com/artist/7HGOpepWDPYxAQPYqq2H21?si=hYUuXw3iT_6SJJdBtqRiUg" target="_blank" class="platform-btn btn-spotify">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        Spotify
+      </a>
+      <a href="https://soundcloud.com/terkoizmusic2" target="_blank" class="platform-btn btn-soundcloud">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1.175 12.225c-.017 0-.034.002-.05.004a.39.39 0 00-.325.382l-.8 5.123.8 5.096c0 .22.18.4.4.4.217 0 .396-.18.396-.4l.91-5.096-.91-5.123a.397.397 0 00-.421-.386zm2.314-.742c-.025 0-.049.002-.073.006-.161.027-.282.165-.3.328L2.4 17.73l.716 4.89c.018.163.14.3.3.327.024.004.048.006.073.006.22 0 .4-.18.4-.4l.812-4.833-.812-5.037a.4.4 0 00-.4-.4zm17.51 1.55c-.196 0-.384.02-.567.057-.39-4.448-4.108-7.915-8.653-7.915-1.197 0-2.341.254-3.37.71-.38.163-.482.33-.486.478v15.37c.004.16.125.294.286.31h12.79c.77 0 1.394-.623 1.394-1.393V14.43a1.914 1.914 0 00-1.394-1.397z"/></svg>
+        SoundCloud
+      </a>
+      <a href="https://twitch.tv/terkoizedm" target="_blank" class="platform-btn btn-twitch">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+        Twitch
+      </a>
+    </div>
+    <div class="scroll-hint">
+      <span class="scroll-line"></span>
+      Scroll to explore
+    </div>
+  </section>
+
+  <!-- TRACKS -->
+  <section id="tracks">
+    <div class="section-header">
+      <div>
+        <div class="section-eyebrow">Discography</div>
+        <h2>Tracks</h2>
+      </div>
+    </div>
+
+    <div class="track-list">
+      <div class="track">
+        <div class="track-num">1</div>
+        <div class="track-info">
+            <div class="track-label"> Track 1 - Terkoiz
+              <span>YOU LOST</span>
+            </div>
+          <iframe 
+          width="100%" 
+          height="150" 
+          scrolling="no" 
+          frameborder="no" 
+          allow="autoplay; encrypted-media" 
+          src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2203673855&color=%237b6cff&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true">
+        </iframe>
+          <div class="track-meta">Terkoiz · 2026</div>
+        </div>
+        <span class="track-type type-original">Original</span>
+        <div class="track-duration">3:53</div>
+      </div>
+      <div class="track">
+        <div class="track-num">2</div>
+        <div class="track-info">
+          <div class="track-label">Track 2 - Terkoiz
+            <span>the forest of blossoms.</span>
+          </div>
+          <iframe
+                width="100%"
+                height="150"
+                scrolling="no"
+                frameborder="no"
+                allow="autoplay"
+                src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/terkoizmusic2/the-forest-of-blossoms&color=%237b6cff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true">
+          </iframe>
+          <div class="track-meta">Terkoiz · 2022</div>
+        </div>
+        <span class="track-type type-original">Original</span>
+        <div class="track-duration">2:44</div>
+      </div>
+      <div class="track">
+        <div class="track-num">3</div>
+        <div class="track-info">
+          <div class="track-title">Track Title Here</div>
+          <div class="track-meta">Original · 2023</div>
+        </div>
+        <span class="track-type type-original">Original</span>
+        <div class="track-duration">5:01</div>
+      </div>
+      <div class="track">
+        <div class="track-num">4</div>
+        <div class="track-info">
+          <div class="track-title">Track Title — Artist Name Remix</div>
+          <div class="track-meta">Remix · 2023</div>
+        </div>
+        <span class="track-type type-remix">Remix</span>
+        <div class="track-duration">3:58</div>
+      </div>
+      <div class="track">
+        <div class="track-num">5</div>
+        <div class="track-info">
+          <div class="track-title">Track Title Here</div>
+          <div class="track-meta">Original · 2023</div>
+        </div>
+        <span class="track-type type-original">Original</span>
+        <div class="track-duration">4:33</div>
+      </div>
+    </div>
+
+    <p class="tracks-note">Full catalogue available on <a href="https://soundcloud.com/terkoizmusic2" target="_blank">SoundCloud</a> and <a href="https://open.spotify.com/artist/7HGOpepWDPYxAQPYqq2H21?si=hYUuXw3iT_6SJJdBtqRiUg" target="_blank">Spotify</a>.</p>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-text">
+      <div class="section-eyebrow">About</div>
+      <h2 style="margin-bottom:1.25rem">The sound of Terkoiz</h2>
+      <p>Terkoiz is an EDM producer working across EDM, lo-fi, and everything in between — blending driving energy with atmospheric texture.</p>
+      <p>From high-energy remixes to original productions, the music spans moods and tempos but always carries a distinct sonic identity.</p>
+      <p>Catch live sets and production streams on Twitch, or dive into the full catalogue on Spotify and SoundCloud.</p>
+      <div class="genre-tags">
+        <span class="genre-tag">EDM</span>
+        <span class="genre-tag">Lo-fi</span>
+        <span class="genre-tag">Electronic</span>
+        <span class="genre-tag">Originals</span>
+      </div>
+    </div>
+
+    <div class="about-links">
+      <a href="https://open.spotify.com/artist/7HGOpepWDPYxAQPYqq2H21?si=hYUuXw3iT_6SJJdBtqRiUg" target="_blank" class="about-link">
+        <div class="link-icon icon-spotify">
+          <svg viewBox="0 0 24 24" fill="#1db954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        </div>
+        <div class="link-text">
+          <span class="link-name">Spotify</span>
+          <span class="link-handle">Listen on Spotify</span>
+        </div>
+        <span class="link-arrow">→</span>
+      </a>
+
+      <a href="https://soundcloud.com/terkoizmusic2" target="_blank" class="about-link">
+        <div class="link-icon icon-soundcloud">
+          <svg viewBox="0 0 24 24" fill="#ff5500"><path d="M1.175 12.225c-.017 0-.034.002-.05.004a.39.39 0 00-.325.382l-.8 5.123.8 5.096c0 .22.18.4.4.4.217 0 .396-.18.396-.4l.91-5.096-.91-5.123a.397.397 0 00-.421-.386zm2.314-.742c-.025 0-.049.002-.073.006-.161.027-.282.165-.3.328L2.4 17.73l.716 4.89c.018.163.14.3.3.327.024.004.048.006.073.006.22 0 .4-.18.4-.4l.812-4.833-.812-5.037a.4.4 0 00-.4-.4zm17.51 1.55c-.196 0-.384.02-.567.057-.39-4.448-4.108-7.915-8.653-7.915-1.197 0-2.341.254-3.37.71-.38.163-.482.33-.486.478v15.37c.004.16.125.294.286.31h12.79c.77 0 1.394-.623 1.394-1.393V14.43a1.914 1.914 0 00-1.394-1.397z"/></svg>
+        </div>
+        <div class="link-text">
+          <span class="link-name">SoundCloud</span>
+          <span class="link-handle">Stream free on SoundCloud</span>
+        </div>
+        <span class="link-arrow">→</span>
+      </a>
+
+      <a href="https://twitch.tv/terkoizedm" target="_blank" class="about-link">
+        <div class="link-icon icon-twitch">
+          <svg viewBox="0 0 24 24" fill="#9146ff"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+        </div>
+        <div class="link-text">
+          <span class="link-name">Twitch</span>
+          <span class="link-handle">Live sets and production streams</span>
+        </div>
+        <span class="link-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Terkoiz. All rights reserved.
+      Website by Zankiru
+    </p>
+    <a href="index.html">Back to portfolio</a>
+  </footer>
+
+</body>
+</html>
