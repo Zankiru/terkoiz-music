@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
 export default function TrackItem({ track, index, isExpanded, onToggle }) {
   return (
     <div
       className={`cyber-panel rounded-xl border transition-all duration-300 overflow-hidden ${
         isExpanded
-          ? 'border-neon-cyan/50 shadow-[0_0_20px_rgba(0,242,254,0.15)]'
-          : 'border-cyber-border hover:border-white/20'
+          ? "border-neon-cyan/50 shadow-[0_0_20px_rgba(0,242,254,0.15)]"
+          : "border-cyber-border hover:border-white/20"
       }`}
     >
       <div
@@ -15,7 +15,7 @@ export default function TrackItem({ track, index, isExpanded, onToggle }) {
       >
         <div className="flex items-center gap-4 min-w-0">
           <span className="font-mono text-xs text-neutral-500 w-6">
-            {String(index + 1).padStart(2, '0')}
+            {String(index + 1).padStart(2, "0")}
           </span>
           <div className="truncate">
             <h4 className="font-syne font-semibold text-sm md:text-base text-white truncate">
@@ -30,9 +30,9 @@ export default function TrackItem({ track, index, isExpanded, onToggle }) {
         <div className="flex items-center gap-3 shrink-0">
           <span
             className={`text-[10px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-full border ${
-              track.type === 'Original'
-                ? 'border-neon-purple/40 bg-neon-purple/10 text-neon-magenta'
-                : 'border-neon-cyan/40 bg-neon-cyan/10 text-neon-cyan'
+              track.type === "Original"
+                ? "border-neon-purple/40 bg-neon-purple/10 text-neon-magenta"
+                : "border-neon-cyan/40 bg-neon-cyan/10 text-neon-cyan"
             }`}
           >
             {track.type}
@@ -41,7 +41,7 @@ export default function TrackItem({ track, index, isExpanded, onToggle }) {
             {track.duration}
           </span>
           <button className="text-xs font-mono text-white bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 transition-colors">
-            {isExpanded ? 'CLOSE' : 'PLAY'}
+            {isExpanded ? "CLOSE" : "PLAY"}
           </button>
         </div>
       </div>
@@ -52,10 +52,12 @@ export default function TrackItem({ track, index, isExpanded, onToggle }) {
             src={track.embedUrl}
             title={track.title}
             width="100%"
-            height={track.platform === 'spotify' ? '152' : '120'}
+            height={track.platform === "spotify" ? "152" : "166"}
+            scrolling="no"
+            frameBorder="no"
             allow="autoplay; encrypted-media"
-            className="rounded-lg mt-3"
-            frameBorder="0"
+            loading="lazy"
+            className="rounded-lg mt-3 w-full"
           />
         </div>
       )}

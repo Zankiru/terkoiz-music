@@ -7,7 +7,8 @@ export const TRACKS_DATA = [
     type: "Original",
     duration: "3:53",
     platform: "soundcloud",
-    embedUrl: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2203673855&color=%2300f2fe&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=true&visual=true"
+    // Clean widget endpoint pointing directly to the track URL
+    embedUrl: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/terkoizmusic2/you-lost&color=%2300f2fe&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
   },
   {
     id: 2,
@@ -17,7 +18,7 @@ export const TRACKS_DATA = [
     type: "Original",
     duration: "2:44",
     platform: "soundcloud",
-    embedUrl: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/terkoizmusic2/the-forest-of-blossoms&color=%2300f2fe&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+    embedUrl: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/terkoizmusic2/the-forest-of-blossoms&color=%2300f2fe&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
   },
   {
     id: 3,
@@ -37,7 +38,8 @@ export const TRACKS_DATA = [
     type: "Remix",
     duration: "4:21",
     platform: "soundcloud",
-    embedUrl: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A1933544513&color=%2300f2fe&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+    // Used the numeric ID without double-encoding (%253A -> %3A)
+    embedUrl: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1933544513&color=%2300f2fe&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
   },
   {
     id: 5,
