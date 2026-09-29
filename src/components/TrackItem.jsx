@@ -55,7 +55,7 @@ export default function TrackItem({ track, index, isExpanded, onToggle }) {
             height={track.platform === "spotify" ? "152" : "166"}
             scrolling="no"
             frameBorder="no"
-            allow="autoplay; encrypted-media"
+            allow="autoplay"
             loading="lazy"
             className="rounded-lg mt-3 w-full"
           />
