@@ -1,6 +1,5 @@
 # Terkoiz — Official Artist & Promotional Hub
 
-[![Deploy to GitHub Pages](https://github.com/Zankiru/terkoiz-web/actions/workflows/deploy.yml/badge.svg)](https://github.com/Zankiru/terkoiz-web/actions/workflows/deploy.yml)
 [![Live Site](https://img.shields.io/badge/Live_Site-GitHub_Pages-00f2fe?style=flat&logo=github)](https://zankiru.github.io/terkoiz-web/)
 
 A cyber-electronic promotional portfolio and discography web application designed and built for EDM producer and DJ **Terkoiz**. 
