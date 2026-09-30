@@ -1,14 +1,14 @@
 export const TRACKS_DATA = [
   {
     id: 1,
-    title: "YOU LOST",
+    title: "THE HOLE",
     artist: "Terkoiz",
     year: "2026",
     type: "Original",
-    duration: "3:53",
+    duration: "3:46",
     platform: "soundcloud",
     // Clean, single-encoded public link
-    embedUrl: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2203673855&color=%2300f2fe&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=true&visual=true"
+    embedUrl: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/we-are-demons-above/terkoiz-the-hole-4&color=%2300f2fe&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"
   },
   {
     id: 2,
